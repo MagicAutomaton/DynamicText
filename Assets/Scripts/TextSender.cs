@@ -32,7 +32,6 @@ public class TextSender : MonoBehaviour
     {
         textProcess = new TextProcess();
         textAnim = new TextAnim(this);
-        //SendTextToTMP("<speed 20>你可以让文字<wave 5>波动<color=blue>起<pause 3.33>来<size=50%>或<speed -1>者<shake 3.3>进行<speed 2>抖动</wave>，如</color>上<speed 0>所</size>示。</shake>");
         SendTextToTMP(str);
     }
 }

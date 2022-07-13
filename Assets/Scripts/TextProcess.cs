@@ -19,7 +19,7 @@ public class TextProcess
     public const string SHAKE_END_PATTERN = "</shake>";
     static readonly Regex SHAKE_END_REG = new Regex(SHAKE_END_PATTERN);
     #endregion
-    #region 指令列表
+    #region commands
     public List<ProcessedCommand> commandList;
     Stack<ProcessedCommand> waveStack;
     Stack<ProcessedCommand> shakeStack;
@@ -27,13 +27,13 @@ public class TextProcess
     public List<ProcessedCommand> speedList;
     public List<ProcessedCommand> animList;
     #endregion
-    public string rawString;//原始文本
-    public string initString;//去除rich text后的文本
-    public string rawProcessedString;//rawString去除自定义标签后文本
-    public string processedString;//initString去除自定义标签后文本
+    public string rawString;//init text
+    public string initString;//text without rich texts
+    public string rawProcessedString;//text without custom tags
+    public string processedString;//text without both rich texts and custom tags
     public void ProcessCommand(string rawText,string text)
     {
-        #region 获取全部匹配
+        #region regex
         MatchCollection pauseRes = PAUSE_REG.Matches(text);
         MatchCollection speedRes = SPEED_REG.Matches(text);
         MatchCollection waveRes = WAVE_REG.Matches(text);
@@ -41,7 +41,7 @@ public class TextProcess
         MatchCollection shakeRes = SHAKE_REG.Matches(text);
         MatchCollection shakeEndRes = SHAKE_END_REG.Matches(text);
         #endregion
-        #region 初始化
+        #region init
         commandList = new List<ProcessedCommand>();
         waveStack = new Stack<ProcessedCommand>();
         shakeStack = new Stack<ProcessedCommand>();
@@ -65,7 +65,7 @@ public class TextProcess
         rawProcessedString = Regex.Replace(rawProcessedString, SHAKE_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, SHAKE_END_PATTERN, "");
         #endregion
-        #region 初步分析指令
+        #region process
         foreach (Match m in pauseRes)
             commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.pause, float.Parse(m.Groups["LENGTH"].Value)));
         foreach (Match m in speedRes)
@@ -79,7 +79,7 @@ public class TextProcess
         foreach (Match m in shakeEndRes)
             commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.shakeEnd));
         #endregion
-        #region 进一步分析指令
+        #region farther process
         commandList.Sort(new ProcessedCommand.CommandComparer());
         int sumCount = 0;
         for (int i = 0; i < commandList.Count; ++i)

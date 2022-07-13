@@ -30,7 +30,7 @@ public class TextAnim
         textMeshPro.ForceMeshUpdate();
         TMP_MeshInfo[] initMeshInfo = textMeshPro.textInfo.CopyMeshInfoVertexData();
         float[] sumTime = new float[maxCharCount];
-        float prevStartTime = Time.time;
+        float prevStartTime = float.MinValue;
         while (true)
         {
             if (visibleCharCount < maxCharCount && Time.time - prevStartTime >= 1f / textSpeed)
@@ -44,16 +44,9 @@ public class TextAnim
                     if (c.pos == visibleCharCount)
                         textSpeed = c.val[0] == 0 ? 8 : c.val[0];
             }
-/*                Color32[][] originalColors = new Color32[textMeshPro.textInfo.meshInfo.Length][];
-                for (int j = 0; j < originalColors.Length; j++)
-                {
-                    Color32[] theColors = textMeshPro.textInfo.meshInfo[j].colors32;
-                    originalColors[j] = new Color32[theColors.Length];
-                    System.Array.Copy(theColors, originalColors[j], theColors.Length);
-                }*/
+
             for(int i=0;i<maxCharCount;++i)
             {
-
                 TMP_CharacterInfo charInfo = textMeshPro.textInfo.characterInfo[i];
                 int matInd = charInfo.materialReferenceIndex;
                 int vertInd = charInfo.vertexIndex;
@@ -76,14 +69,6 @@ public class TextAnim
 
                 for (int j = 0; j < 4; ++j)
                     newVertices[vertInd + j] = (animOffset + initVertices[vertInd + j] - centerPos) * sizeScale + centerPos;
-
-/*                Color32[] destinationColors = textMeshPro.textInfo.meshInfo[matInd].colors32;
-                Color32 theColor = originalColors[matInd][vertInd];
-                //Color32 theColor = new Color32((byte)Random.Range(0, 256), (byte)Random.Range(0, 256), (byte)Random.Range(0, 256), 255);
-                destinationColors[vertInd + 0] = theColor;
-                destinationColors[vertInd + 1] = theColor;
-                destinationColors[vertInd + 2] = theColor;
-                destinationColors[vertInd + 3] = theColor;*/
 
                 textMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
             }
