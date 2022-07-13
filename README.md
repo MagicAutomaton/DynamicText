@@ -14,7 +14,7 @@ Format:&lt;pause <i>time</i>&gt;
 
 Example:
 
-<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/pause.gif?token=GHSAT0AAAAAABWR2T6WTO4UGZU3PPILQIR6YWOQ6NA">
+<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/pause.gif">
 
 <h1>&lt;speed&gt;</h1>
 
@@ -24,7 +24,7 @@ Format:&lt;speed <i>speed</i>&gt;
 
 Example:
 
-<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/speed.gif?token=GHSAT0AAAAAABWR2T6WSZXP7G23SYO6CJDWYWOQ7KQ">
+<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/speed.gif">
 
 <h1>&lt;wave&gt;</h1>
 
@@ -34,7 +34,7 @@ Format:&lt;wave <i>intensity</i>&gt;&lt;/wave&gt;
 
 Example:
 
-<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/wave.gif?token=GHSAT0AAAAAABWR2T6XTSVUSPWIXYTT63ZUYWOQ7UA">
+<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/wave.gif">
 
 <h1>&lt;shake&gt;</h1>
 
@@ -44,4 +44,4 @@ Format:&lt;shake <i>intensity</i>&gt;&lt;/shake&gt;
 
 Example:
 
-<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/shake.gif?token=GHSAT0AAAAAABWR2T6WWVN3MHAFSPBSIBXCYWOQ7AQ">
+<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/shake.gif">
