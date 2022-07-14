@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 67113290}
-  str: <colorful>Colorful</colorful> texts!
+  str: <alpha 1 0.6>We are <alpha 0.4 0>transparent</alpha>.</alpha>
 --- !u!1 &77262667
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,7 +488,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: <colorful>Colorful</colorful> texts!
+  m_Text: <alpha 0.4 0.1>We are <alpha 1 0>transparent</alpha>.</alpha>
 --- !u!222 &797150829
 CanvasRenderer:
   m_ObjectHideFlags: 0

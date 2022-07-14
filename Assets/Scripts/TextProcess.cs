@@ -22,12 +22,17 @@ public class TextProcess
     static readonly Regex COLORFUL_REG = new Regex(COLORFUL_PATTERN);
     public const string COLORFUL_END_PATTERN = "</colorful>";
     static readonly Regex COLORFUL_END_REG = new Regex(COLORFUL_END_PATTERN);
+    public const string ALPHA_PATTERN = "<alpha (?<START>\\d*(?:\\.\\d*)?) (?<END>\\d*(?:\\.\\d*)?)>";
+    static readonly Regex ALPHA_REG = new Regex(ALPHA_PATTERN);
+    public const string ALPHA_END_PATTERN = "</alpha>";
+    static readonly Regex ALPHA_END_REG = new Regex(ALPHA_END_PATTERN);
     #endregion
     #region commands
     public List<ProcessedCommand> commandList;
     Stack<ProcessedCommand> waveStack;
     Stack<ProcessedCommand> shakeStack;
     Stack<ProcessedCommand> colorfulStack;
+    Stack<ProcessedCommand> alphaStack;
     public List<ProcessedCommand> pauseList;
     public List<ProcessedCommand> speedList;
     public List<ProcessedCommand> animList;
@@ -48,12 +53,15 @@ public class TextProcess
         MatchCollection shakeEndRes = SHAKE_END_REG.Matches(text);
         MatchCollection colorfulRes = COLORFUL_REG.Matches(text);
         MatchCollection colorfulEndRes = COLORFUL_END_REG.Matches(text);
+        MatchCollection alphaRes = ALPHA_REG.Matches(text);
+        MatchCollection alphaEndRes = ALPHA_END_REG.Matches(text);
         #endregion
         #region init
         commandList = new List<ProcessedCommand>();
         waveStack = new Stack<ProcessedCommand>();
         shakeStack = new Stack<ProcessedCommand>();
         colorfulStack = new Stack<ProcessedCommand>();
+        alphaStack = new Stack<ProcessedCommand>();
         pauseList = new List<ProcessedCommand>();
         speedList = new List<ProcessedCommand>();
         animList = new List<ProcessedCommand>();
@@ -72,6 +80,8 @@ public class TextProcess
         processedString = Regex.Replace(processedString, SHAKE_END_PATTERN, "");
         processedString = Regex.Replace(processedString, COLORFUL_PATTERN, "");
         processedString = Regex.Replace(processedString, COLORFUL_END_PATTERN, "");
+        processedString = Regex.Replace(rawProcessedString, ALPHA_PATTERN, "");
+        processedString = Regex.Replace(rawProcessedString, ALPHA_END_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, PAUSE_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, SPEED_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, WAVE_PATTERN, "");
@@ -80,6 +90,8 @@ public class TextProcess
         rawProcessedString = Regex.Replace(rawProcessedString, SHAKE_END_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, COLORFUL_PATTERN, "");
         rawProcessedString = Regex.Replace(rawProcessedString, COLORFUL_END_PATTERN, "");
+        rawProcessedString = Regex.Replace(rawProcessedString, ALPHA_PATTERN, "");
+        rawProcessedString = Regex.Replace(rawProcessedString, ALPHA_END_PATTERN, "");
         #endregion
         #region process
         foreach (Match m in pauseRes)
@@ -98,6 +110,10 @@ public class TextProcess
             commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.colorful));
         foreach (Match m in colorfulEndRes)
             commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.colorfulEnd));
+        foreach (Match m in alphaRes)
+            commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.alpha, float.Parse(m.Groups["START"].Value), float.Parse(m.Groups["END"].Value)));
+        foreach (Match m in alphaEndRes)
+            commandList.Add(new ProcessedCommand(m.Index, m.Length, TagType.alphaEnd));
         #endregion
         #region farther process
         commandList.Sort(new ProcessedCommand.CommandComparer());
@@ -132,6 +148,12 @@ public class TextProcess
                 case TagType.colorfulEnd:
                     AddColorful(commandList[i]);
                     break;
+                case TagType.alpha:
+                    PushAlpha(commandList[i]);
+                    break;
+                case TagType.alphaEnd:
+                    AddAlpha(commandList[i]);
+                    break;
             }
         }
         while (waveStack.Count > 0)
@@ -144,7 +166,11 @@ public class TextProcess
         }
         while(colorfulStack.Count>0)
         {
-            AddColorful(new ProcessedCommand(processedString.Length, 0, TagType.colorful));
+            AddColorful(new ProcessedCommand(processedString.Length, 0, TagType.colorfulEnd));
+        }
+        while(alphaStack.Count>0)
+        {
+            AddAlpha(new ProcessedCommand(processedString.Length, 0, TagType.alphaEnd));
         }
         Debug.Log("Finish Process");
         #endregion
@@ -168,6 +194,10 @@ public class TextProcess
     void PushColorful(ProcessedCommand command)
     {
         colorfulStack.Push(command);
+    }
+    void PushAlpha(ProcessedCommand command)
+    {
+        alphaStack.Push(command);
     }
     void AddWave(ProcessedCommand command)
     {
@@ -193,6 +223,15 @@ public class TextProcess
         colorfulStart.length = command.pos - colorfulStart.pos;
         colorList.Add(colorfulStart);
     }
+    void AddAlpha(ProcessedCommand command)
+    {
+        if (alphaStack.Count <= 0)
+            return;
+        ProcessedCommand alphaStart = alphaStack.Pop();
+        alphaStart.length = command.pos - alphaStart.pos;
+        colorList.Add(alphaStart);
+    }
+
 }
 public class ProcessedCommand
 {
@@ -225,4 +264,6 @@ public enum TagType
     shakeEnd,
     colorful,
     colorfulEnd,
+    alpha,
+    alphaEnd,
 }

@@ -45,7 +45,7 @@ public class TextAnim
                         textSpeed = c.val[0] == 0 ? 8 : c.val[0];
             }
 
-            for(int i=0;i<maxCharCount;++i)
+            for (int i = 0; i < maxCharCount; ++i)
             {
                 TMP_CharacterInfo charInfo = textMeshPro.textInfo.characterInfo[i];
                 int matInd = charInfo.materialReferenceIndex;
@@ -62,7 +62,7 @@ public class TextAnim
                 float sizeScale = Mathf.Min(sumTime[i] / textTime, 1);
 
                 Vector3[] initVertices = initMeshInfo[matInd].vertices;
-                Vector3 centerPos = (initVertices[vertInd+0] + initVertices[vertInd+2]) / 2;
+                Vector3 centerPos = (initVertices[vertInd + 0] + initVertices[vertInd + 2]) / 2;
                 Vector3[] newVertices = textMeshPro.textInfo.meshInfo[matInd].vertices;
 
                 Vector3 animOffset = CalcAnimOffset(i);
@@ -95,16 +95,18 @@ public class TextAnim
             }
         return offset;
     }
-    void CalcColor(int charInd,int vertInd, ref TMP_MeshInfo meshes)
+    void CalcColor(int charInd, int vertInd, ref TMP_MeshInfo meshes)
     {
         Color32[] newColor = new Color32[4];
         for (int i = 0; i < 4; ++i)
             newColor[i] = meshes.colors32[vertInd + i];
         bool isColorful = false;
-        foreach(ProcessedCommand command in sender.textProcess.colorList)
-            if(command.pos<=charInd&&command.pos+command.length>charInd)
+        for (int ind = sender.textProcess.colorList.Count - 1; ind >= 0; --ind)
+        {
+            ProcessedCommand command = sender.textProcess.colorList[ind];
+            if (command.pos <= charInd && command.pos + command.length > charInd)
             {
-                switch(command.command)
+                switch (command.command)
                 {
                     case TagType.colorful:
                         if (isColorful)
@@ -113,13 +115,18 @@ public class TextAnim
                         for (int i = 0; i < 4; ++i)
                         {
                             Vector3 vec = meshes.vertices[vertInd + i];
-                            newColor[i].r = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1003, vec.y + Time.time + 1009));
-                            newColor[i].g = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1007, vec.y + Time.time + 1007));
-                            newColor[i].b = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1009, vec.y + Time.time + 1003));
+                            newColor[i].r = (byte)Mathf.Min(Mathf.Max(256 * Mathf.PerlinNoise(vec.x + Time.time + 1003, vec.y + Time.time + 3001), 0), 255);
+                            newColor[i].g = (byte)Mathf.Min(Mathf.Max(256 * Mathf.PerlinNoise(vec.x + Time.time + 2003, vec.y + Time.time + 2003), 0), 255);
+                            newColor[i].b = (byte)Mathf.Min(Mathf.Max(256 * Mathf.PerlinNoise(vec.x + Time.time + 3001, vec.y + Time.time + 1003), 0), 255);
                         }
+                        break;
+                    case TagType.alpha:
+                        newColor[1].a = newColor[2].a = (byte)Mathf.Min(Mathf.Max(256 * command.val[0], 0), 255);
+                        newColor[0].a = newColor[3].a = (byte)Mathf.Min(Mathf.Max(256 * command.val[1], 0), 255);
                         break;
                 }
             }
+        }
         newColor.CopyTo(meshes.colors32, vertInd);
     }
 }
