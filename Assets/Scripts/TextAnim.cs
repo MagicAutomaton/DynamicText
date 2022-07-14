@@ -70,6 +70,8 @@ public class TextAnim
                 for (int j = 0; j < 4; ++j)
                     newVertices[vertInd + j] = (animOffset + initVertices[vertInd + j] - centerPos) * sizeScale + centerPos;
 
+                CalcColor(i, vertInd, ref textMeshPro.textInfo.meshInfo[matInd]);
+
                 textMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
             }
             yield return null;
@@ -92,5 +94,28 @@ public class TextAnim
                 }
             }
         return offset;
+    }
+    void CalcColor(int charInd,int vertInd, ref TMP_MeshInfo meshes)
+    {
+        Color32[] newColor = new Color32[4];
+        for (int i = 0; i < 4; ++i)
+            newColor[i] = meshes.colors32[vertInd + i];
+        foreach(ProcessedCommand command in sender.textProcess.colorList)
+            if(command.pos<=charInd&&command.pos+command.length>charInd)
+            {
+                switch(command.command)
+                {
+                    case TagType.colorful:
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            Vector3 vec = meshes.vertices[vertInd + i];
+                            newColor[i].r = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1003, vec.y + Time.time + 1009));
+                            newColor[i].g = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1007, vec.y + Time.time + 1007));
+                            newColor[i].b = (byte)(256 * Mathf.PerlinNoise(vec.x + Time.time + 1009, vec.y + Time.time + 1003));
+                        }
+                        break;
+                }
+            }
+        newColor.CopyTo(meshes.colors32, vertInd);
     }
 }
