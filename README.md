@@ -65,3 +65,13 @@ Format:&lt;colorful&gt;&lt;/colorful&gt;
 Example:
 
 <image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/colorful.gif">
+
+<h3>&lt;alpha&gt;</h3>
+
+Format:&lt;alpha <i>topAlpha</i> <i>bottomAlpha</i>&gt;&lt;/alpha&gt;
+  
+<i>If an alpha tag is nested inside another alpha tag, the inner one will take effect.</i>
+  
+Example:
+
+<image src="https://raw.githubusercontent.com/MagicAutomaton/MyImages/main/DynamicText/alpha.gif">
