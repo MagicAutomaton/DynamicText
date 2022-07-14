@@ -100,12 +100,16 @@ public class TextAnim
         Color32[] newColor = new Color32[4];
         for (int i = 0; i < 4; ++i)
             newColor[i] = meshes.colors32[vertInd + i];
+        bool isColorful = false;
         foreach(ProcessedCommand command in sender.textProcess.colorList)
             if(command.pos<=charInd&&command.pos+command.length>charInd)
             {
                 switch(command.command)
                 {
                     case TagType.colorful:
+                        if (isColorful)
+                            break;
+                        isColorful = true;
                         for (int i = 0; i < 4; ++i)
                         {
                             Vector3 vec = meshes.vertices[vertInd + i];

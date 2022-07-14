@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 67113290}
-  str: White <colorful>Colorful</colorful> <color=#000>Black</color>.
+  str: <colorful>Colorful</colorful> texts!
 --- !u!1 &77262667
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,7 +488,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: White <colorful>Colorful</colorful> <color=#000>Black</color>.
+  m_Text: <colorful>Colorful</colorful> texts!
 --- !u!222 &797150829
 CanvasRenderer:
   m_ObjectHideFlags: 0
